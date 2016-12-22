@@ -1,6 +1,7 @@
+//@flow
+
 import React from "react";
 import ReactDOM from "react-dom";
-import {Router, Route, IndexRoute, hashHistory,browserHistory} from "react-router";
 
 class App extends React.Component {
     constructor(props) {
@@ -8,6 +9,8 @@ class App extends React.Component {
     }
 
     render() {
+        // flow type error!
+        // let a:string = 5;
         return (
             <h1>Hello</h1>
         )

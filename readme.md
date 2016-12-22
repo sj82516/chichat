@@ -1,8 +1,8 @@
 # yj-react-boilerplate  
 
 ### structure
-・assets: for image and static files
-・dist: bundle.min.js, auto gen by webpack
+・assets: for image and static files  
+・dist: bundle.min.js, auto gen by webpack  
 ・src: all source codes. app.jsx is index file.
 
 ### What is inside  
