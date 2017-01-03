@@ -1,0 +1,34 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarn add express
+
+PATH: 
+  /usr/local/openssl/bin:/usr/local/openssl/bin:/usr/local/redis/bin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11R6/bin:/usr/local/go/bin:/Users/zhengyuanjie/Desktop/platform-tools/:/Users/zhengyuanjie/Desktop/
+
+Yarn version: 
+  0.18.1
+
+Node version: 
+  6.2.1
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "server",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: connect ECONNREFUSED 192.168.0.1:443
+      at Object.exports._errnoException (util.js:1007:11)
+      at exports._exceptionWithHostPort (util.js:1030:20)
+      at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1080:14)

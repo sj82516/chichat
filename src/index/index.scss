@@ -1,0 +1,192 @@
+$logo_height: 20%;
+$form_height: 420px;
+@import "../common";
+
+.index {
+  min-width: 320px;
+  max-width: 480px;
+  width: 100%;
+  height: 100vh;
+  margin: 0 auto;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+  border: $dark_brwon 1px solid;
+  overflow: scroll;
+}
+
+.index-wrapper{
+  width: 100%;
+}
+
+.index__logo {
+  width: 100%;
+  margin: 0 auto;
+
+  animation: logoAnimation 2s 1 ease forwards;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.index__logo-image {
+  width: 55%;
+  height: auto;
+  margin-right: 3%;
+}
+
+.form {
+  opacity: 0;
+  width: 100%;
+  max-height: 0;
+  animation: formAnimation 1.5s 2s 1 ease forwards;
+  margin-top: 3%;
+
+  font-weight: bolder;
+}
+
+.form-wrapper {
+  border: 6px $light_yellow solid;
+  border-radius: 0 40px 40px 40px;
+  padding: 2% 3%;
+  margin: 0 auto;
+  overflow: scroll;
+  width: 60%;
+  min-width: 240px;
+  opacity: 0;
+  max-height: 0;
+
+  animation: formWrapperAnimation 1.5s 4s 1 ease forwards;
+}
+
+.form-type {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  box-sizing: border-box;
+  border-bottom: 4px solid $dark_brwon;
+  font-size: $big_font;
+  color: $dark_brwon;
+  &__btn {
+    cursor: pointer;
+    &_clicked {
+      color: $dark_brwon;
+    }
+    &_unclicked{
+      color: $light_brown;
+    }
+  }
+}
+
+.form-input-section__input-label {
+  display: block;
+  margin: 10px 0 2px 0;
+  font-size: $mid_font;
+  color: $dark_brwon;
+}
+
+.form-input-section__input-field {
+  display: block;
+  width: 100%;
+  border: none;
+  height: 36px;
+  padding-left: 5px;
+  background-color: grey;
+  color: white;
+  font-size: $small_font;
+  line-height: 36px;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #e7e7e7;
+    font-size: 12px;
+  }
+}
+
+.form-input-section__err {
+  margin: 2px 0;
+  color: #e25217;
+  font-size: $small_font;
+}
+
+.form-seperate-line{
+  text-align: center;
+  margin: 5px 0;
+  color: $dark_brwon;
+}
+
+.social-media-button {
+  background-color: $light_gray;
+  color: $dark_gray;
+
+  font-size: $big_font;
+  flex: 1;
+  margin: 10px 5px;
+
+  border: none;
+  cursor: pointer;
+}
+
+.social-media-buttons {
+  display: flex;
+  align-content: space-around;
+}
+
+.form-submit-button {
+  background-color: $light_yellow;
+  border-radius: 0 0 40px 40px;
+  width: 100%;
+  height: 40px;
+  line-height: $mid_font;
+  font-size: $mid_font;
+  color: $dark_brwon;
+  border: none;
+  cursor: pointer;
+  &_disable{
+    background-color: $dark_gray;
+    color: $light_gray;
+  }
+}
+
+@keyframes logoAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// form animation
+// 先展開form，將logo推到正確位置
+@keyframes formAnimation {
+  0% {
+    opacity: 1;
+    padding: 0;
+    max-height: 0;
+    min-height: 0;
+  }
+  100% {
+    opacity: 1;
+    min-height: $form_height;
+  }
+}
+// formwarpper animation
+// 展開form後，formwrapper再展開，呈現拉開表單的動畫
+@keyframes formWrapperAnimation {
+  0% {
+    opacity: 1;
+    max-height: 0;
+  }
+  100% {
+    opacity: 1;
+    height: auto;
+    max-height: $form_height;
+  }
+}
