@@ -129,7 +129,7 @@ export default function reducer(state = defaultState, action) {
         case 'GET_INIT_DATA_FULFILLED': {
             let res = JSON.parse(action.payload.text);
             if (res.error == 'noData') {
-                return {...state, fetching: false}
+                return {...state, ...defaultState}
             }
             return {...state, fetching: false, user: res.data.user, token: res.data.token}
         }

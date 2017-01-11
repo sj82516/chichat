@@ -6,7 +6,7 @@ export class Container extends React.Component {
     }
     render() {
         return (
-            <div style={{minWidth: '320px', maxWidth: '480px', minHeight: '100vh', margin: 'auto' }}>{this.props.children}</div>
+            <div style={{minWidth: '320px', maxWidth: '480px', minHeight: '100vh', margin: 'auto', overflow: 'hidden' }}>{this.props.children}</div>
         )
     }
 }

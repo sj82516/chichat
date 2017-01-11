@@ -2,8 +2,7 @@ let router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const superAgent = require('superagent');
 const mongoose = require('mongoose');
-const UserSchema = require('../schema/user.schema');
-const UserModel = mongoose.model('User', UserSchema);
+const UserModel = require('../schema/user.schema');
 const multer = require('multer');
 const path = require('path');
 
@@ -15,7 +14,7 @@ let storage = multer.diskStorage({
         let fileExRE = /\..*$/;
         let fileExt = fileExRE.exec(file.originalname) == null ? '.png' : fileExRE.exec(file.originalname)[0];
         let subPathRE = /^\/([a-zA-Z]*)\//.exec(req.originalUrl)[1];
-        let subPath = subPathRE=='setUserAvatar'?'-avatar':'-bgImg';
+        let subPath = subPathRE == 'setUserAvatar' ? '-avatar' : '-bgImg';
         cb(null, req.account + subPath + fileExt)
     }
 });
@@ -122,18 +121,27 @@ passport.serializeUser(function (info, done) {
 
 // 從redis中將值放入 req.session.passport.user中
 passport.deserializeUser(function (info, done) {
-    console.log('info', info);
-    UserModel.find({account: info}).exec().then(user=>{
-        done(null, {data:{user:user[0], token:createJWT(user[0].account)}});
-    })
+    console.log('de:', info);
+    if (info) {
+        UserModel.find({account: info}).exec().then(user=> {
+            if (user[0]) {
+                done(null, {data: {user: user[0], token: createJWT(user[0].account)}});
+            } else {
+                done(null, false, {error: 'NoData'});
+            }
+        }).catch(err=> {
+            console.log("DBError", err);
+            done(null, false, {error: 'NoData'});
+        })
+    }
 });
 
 router.get('/auth/github', passport.authenticate('github'));
 // 將頁面導回首頁
 router.get('/auth/github/callback',
     passport.authenticate('github', {
-        failureRedirect: 'http://localhost:8080',
-        session: true, successRedirect: 'http://localhost:8080'
+        failureRedirect: serverURL,
+        session: true, successRedirect: serverURL
     }));
 
 router.get('/auth/google',
@@ -141,16 +149,16 @@ router.get('/auth/google',
 
 router.get('/auth/google/callback',
     passport.authenticate('google', {
-        failureRedirect: 'http://localhost:8080',
-        session: true, successRedirect: 'http://localhost:8080'
+        failureRedirect: serverURL,
+        session: true, successRedirect: serverURL
     }));
 
 router.get('/auth/facebook', passport.authenticate('facebook', {scope: ['public_profile', 'user_friends']}));
 
 router.get('/auth/facebook/callback',
     passport.authenticate('facebook', {
-        failureRedirect: 'http://localhost:8080',
-        session: true, successRedirect: 'http://localhost:8080'
+        failureRedirect: serverURL,
+        session: true, successRedirect: serverURL
     }));
 
 router.post('/loginByAccount',
@@ -219,7 +227,6 @@ router.param('account', function (req, res, next, account) {
     token = req.header('x-access-token');
     try {
         let decoded = jwt.verify(token, jwtSecret);
-        console.log('access-token:', token, decoded);
         if (account != decoded.data) throw new Error('tokenInvalid');
     } catch (e) {
         console.log(e);
@@ -247,7 +254,7 @@ router.post('/setUserInfo/:account', function (req, res) {
             return UserModel.update({'account': req.account}, {
                 'nickname': req.body.nickname,
                 'gender': req.body.gender,
-                firstTimeLogin:false
+                firstTimeLogin: false
             }, {
                 'multi': false
             }).exec()
@@ -266,7 +273,10 @@ router.post('/setUserInfo/:account', function (req, res) {
 router.post('/setUserAvatar/:account', function (req, res) {
     upload(req, res, function (err) {
         if (err) return res.json({'error': 'serverError'});
-        UserModel.update({account: req.account}, {avatar: serverURL + '/uploads/' + req.file.filename, firstTimeLogin:false}, {'multi': false}).exec()
+        UserModel.update({account: req.account}, {
+            avatar: serverURL + '/uploads/' + req.file.filename,
+            firstTimeLogin: false
+        }, {'multi': false}).exec()
             .then((numberAffected)=> {
                 if (numberAffected.n != 1) {
                     return res.json({'error': 'DBError'});
@@ -282,7 +292,10 @@ router.post('/setUserAvatar/:account', function (req, res) {
 router.post('/setUserBgImg/:account', function (req, res) {
     upload(req, res, function (err) {
         if (err) return res.json({'error': 'serverError'});
-        UserModel.update({account: req.account}, {bgImg: serverURL + '/uploads/' + req.file.filename, firstTimeLogin:false}, {'multi': false}).exec()
+        UserModel.update({account: req.account}, {
+            bgImg: serverURL + '/uploads/' + req.file.filename,
+            firstTimeLogin: false
+        }, {'multi': false}).exec()
             .then((numberAffected)=> {
                 if (numberAffected.n != 1) {
                     return res.json({'error': 'DBError'});
@@ -295,12 +308,12 @@ router.post('/setUserBgImg/:account', function (req, res) {
 
 // 取得使用者資料，目的在於資料更新後取得新的資料
 // 成功回傳 user data
-router.get('/getUserData/:account', function(req,res){
-    UserModel.findOne({account:req.account}).exec().then((user, err)=>{
-        if(!user || err){
-            return res.json({error:"DBError"});
+router.get('/getUserData/:account', function (req, res) {
+    UserModel.findOne({account: req.account}).exec().then((user, err)=> {
+        if (!user || err) {
+            return res.json({error: "DBError"});
         }
-        res.json({data:{user}});
+        res.json({data: {user}});
     })
 });
 

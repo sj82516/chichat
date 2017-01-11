@@ -9,10 +9,12 @@ let UserSchema = new Schema({
     bgImg: {type:String, default:''},
     firstTimeLogin: {type:Boolean,  default:true},
     gender: {type:Boolean, default:true},
-    friendlist: [
-        {friendId: String, friendshipTime: Date}
+    friendList: [
+        {friendAccount: String, friendshipTime: Date}
     ],
     isFirstLogin:{type:Boolean, default:true}
 });
 
-module.exports = UserSchema;
+const UserModel = mongoose.model('User', UserSchema);
+
+module.exports = UserModel;

@@ -2,10 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const path = require('path');
 const app = express();
+const http = require('http').Server(app);
 const morgan = require('morgan');
-const {MongoDB} = require('./db.connection');
+const {MongoDB, RedisDB} = require('./db.connection');
 const redisStore = require('connect-redis')(session);
+const io = require('socket.io')(http);
+const handleSocket = require('./routes/io');
 
 let passport = require('passport');
 
@@ -13,6 +17,11 @@ let passport = require('passport');
 MongoDB.on('error', (err)=>console.error('connection error:',err));
 MongoDB.once('open', function() {
     console.log('mongodb connected');
+});
+
+//Redis
+RedisDB.on("error", function (err) {
+    console.log("redisdb error:",err);
 });
 
 const userRoute = require('./routes/user.route');
@@ -44,7 +53,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 24*3600000 },
-    ttl: 24*3600
+    ttl: 24*3600000
 }));
 
 app.use(passport.initialize());
@@ -52,7 +61,14 @@ app.use(passport.session());
 
 app.use(userRoute);
 
-app.listen('4200', ()=>{
+// handle 404 , redirect to main page
+app.use((req, res)=>{
+    res.redirect('/');
+});
+
+handleSocket(io);
+
+http.listen('4200', ()=>{
    console.log('server start');
 });
 

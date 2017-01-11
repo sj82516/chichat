@@ -1,6 +1,7 @@
 import request from "superagent";
 
-const serverURL = 'http://localhost:4200'
+const serverURL = 'http://localhost:4200';
+
 
 //表單:切換登入或登出
 export function toggleForm(formType) {
@@ -62,14 +63,14 @@ export function nicknameValidate(nickname) {
     };
 }
 //設定性別
-export function setUserGender(gender){
+export function setUserGender(gender) {
     return {
         type: "SET_USER_GENDER",
         payload: gender
     };
 }
 //設定使用者暱稱與性別
-export function setUserInfo(nickname, gender, token, account){
+export function setUserInfo(nickname, gender, token, account) {
     return {
         type: "SET_USER_INFO",
         payload: request.post(serverURL + '/setUserInfo/' + account)
@@ -81,7 +82,7 @@ export function setUserInfo(nickname, gender, token, account){
     };
 }
 // 設定使用者的大頭照
-export function setUserAvatar(img){
+export function setUserAvatar(img) {
     return {
         type: "SET_USER_AVATAR",
         payload: img
@@ -90,24 +91,24 @@ export function setUserAvatar(img){
 // 原本的webURL無法直接顯示，要先轉為BLOB
 export function getUserAvatarBlob(imgSrc) {
     return {
-        type:'GET_USER_AVATAR_BLOB',
+        type: 'GET_USER_AVATAR_BLOB',
         payload: request.get(imgSrc)
             .responseType('blob')
     }
 }
 // 上傳到伺服器
-export function uploadUserAvatar(avatar, token, account){
+export function uploadUserAvatar(avatar, token, account) {
     console.log(avatar);
     return {
         type: "UPLOAD_USER_AVATAR",
         payload: request.post(serverURL + '/setUserAvatar/' + account)
             .withCredentials()
             .set('x-access-token', token)
-            .attach('image',avatar)
+            .attach('image', avatar)
     };
 }
 
-export function setUserBgImg(img){
+export function setUserBgImg(img) {
     return {
         type: "SET_USER_BG_IMG",
         payload: img
@@ -116,30 +117,30 @@ export function setUserBgImg(img){
 
 export function getUserBgImgBlob(imgSrc) {
     return {
-        type:'GET_USER_BG_IMG_BLOB',
+        type: 'GET_USER_BG_IMG_BLOB',
         payload: request.get(imgSrc)
             .responseType('blob')
     }
 }
 
-export function uploadUserBgImg(bgImg, token, account){
+export function uploadUserBgImg(bgImg, token, account) {
     return {
         type: "UPLOAD_USER_BG_IMG",
         payload: request.post(serverURL + '/setUserBgImg/' + account)
             .withCredentials()
             .set('x-access-token', token)
-            .attach('image',bgImg)
+            .attach('image', bgImg)
     };
 }
 
-export function goNextStep(step){
-    return{
+export function goNextStep(step) {
+    return {
         type: "GO_NEXT_STEP",
         payload: step
     }
 }
 
-export function getUserData(account, token){
+export function getUserData(account, token) {
     return {
         type: "GET_USER_DATA",
         payload: request.get(serverURL + '/getUserData/' + account)
@@ -149,7 +150,7 @@ export function getUserData(account, token){
 }
 
 export function logout() {
-    return{
+    return {
         type: "LOGOUT",
         payload: ''
     }
